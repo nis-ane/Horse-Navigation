@@ -111,8 +111,8 @@ print(tst_img_data.shape)
 print(tst_lbl_data.shape)
 
 
-tr_img_data2 = normalize(tr_img_data) ### YOUR CODE HERE
-tst_img_data2 = normalize(tst_img_data) ### YOUR CODE HERE
+tr_img_data2 = normalize(tr_img_data) 
+tst_img_data2 = normalize(tst_img_data) 
 
 
 
@@ -178,11 +178,11 @@ BATCH_SIZE = 30
 EPOCHS = 8
 
 tf.reset_default_graph()  # clear default graph
-# don't call K.set_learning_phase() !!! (otherwise will enable dropout in train/test simultaneously)
+
 model = make_model()  # define our model
 
 
-# prepare model for fitting (loss, optimizer, etc)
+# prepare model for fitting 
 model.compile(
     loss='categorical_crossentropy',  # we train 10-way classification
     optimizer=keras.optimizers.adamax(lr=INIT_LR),  # for SGD
@@ -201,19 +201,6 @@ class LrHistory(keras.callbacks.Callback):
 model_filename = 'weights.hdf5'
 last_finished_epoch = None
 
-model.fit(
-    tr_img_data2, tr_lbl_data,  # prepared data
-    batch_size=BATCH_SIZE,
-    epochs=EPOCHS,
-    callbacks=[keras.callbacks.LearningRateScheduler(lr_scheduler), 
-               LrHistory()],
-    validation_data=(tst_img_data2, tst_lbl_data),
-    shuffle=True,
-    verbose=0,
-    initial_epoch=last_finished_epoch or 0
-)
-
-
 def plot_history(history):
     fig = plt.figure(figsize=(15, 7))
     plt.plot(history.history['acc'])
@@ -224,12 +211,6 @@ def plot_history(history):
     plt.legend(['train', 'val'], loc='upper left')
     plt.show()
 
-
-#model.compile(
-#    loss='categorical_crossentropy',  # we train 10-way classification
-#    optimizer=keras.optimizers.adamax(lr=INIT_LR),  # for SGD
-#    metrics=['acc']  # report accuracy during training
-#)
 
 history = model.fit(
     tr_img_data2, tr_lbl_data,  # prepared data
@@ -249,13 +230,8 @@ scores= model.evaluate(tr_img_data2, tr_lbl_data, verbose=0)
 print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
 
 model.save_weights("weights.h5", overwrite= True)
-model.load_weights("weights.h5")
-'''
-tf.reset_default_graph() 
-model= make_model()
-model.load_weights('weights.h5')
-'''
 
+model.load_weights("weights.h5")
 y_pred_test = model.predict(prd_img_data)
 print(y_pred_test)
 y_pred_test_classes = np.argmax(y_pred_test, axis=1)
