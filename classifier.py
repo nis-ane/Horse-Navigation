@@ -136,8 +136,6 @@ def make_model():
     Returns `Sequential` model.
     """
     model = Sequential()
-
-    ### YOUR CODE HERE
     model.add(Conv2D(16,(3,3),padding="same",input_shape=(64, 64, 3)))
     model.add(LeakyReLU(0.1))
     model.add(Conv2D(32,(3,3),padding="same"))
